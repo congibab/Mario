@@ -22,13 +22,15 @@ public class Player : MonoBehaviour
     private SpriteRenderer spr;
     private Rigidbody2D rb;
     private Animator animator;
-
+    private BoxCollider2D Box_col;
+    
 
     //アニメーション（モーション）切り替える変数
     //------------------------------------------------------------------
 
     private bool Working;
     private bool is_Grounding = false; //キャラの着地判定
+    public static bool die = false;
     //------------------------------------------------------------------
 
     private bool is_Jumping;
@@ -38,6 +40,7 @@ public class Player : MonoBehaviour
         spr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        Box_col = GetComponent<BoxCollider2D>();
         is_Jumping = false;
 
         //item_sys = GetComponent<Item_sys>();
@@ -61,6 +64,7 @@ public class Player : MonoBehaviour
         {
             is_Jumping = true;
         }
+
     }
 
     void FixedUpdate()
@@ -75,12 +79,23 @@ public class Player : MonoBehaviour
         initAnimator();
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D col)
     {
 
         if (rb.velocity.y == 0 && rb.velocity.y > velocity_temp.y)
         {
             is_Grounding = true;
+        }
+
+
+        if (col.gameObject.CompareTag("Enemy"))
+        {
+
+            if (transform.position.y <= col.transform.position.y)
+            {
+                die = true;
+                Char_Die();
+            }
         }
     }
 
@@ -128,6 +143,12 @@ public class Player : MonoBehaviour
         is_Jumping = false;
     }
 
+    void Char_Die()
+    {
+        Box_col.enabled = false;
+        rb.AddForce(Jump_Velocity/2, ForceMode2D.Impulse);
+    }
+
     /// <summary>
     /// アニメーション専用変数更新
     /// </summary>
@@ -135,6 +156,7 @@ public class Player : MonoBehaviour
     {
         animator.SetBool("is_Grounding", is_Grounding);
         animator.SetBool("Working", Working);
+        animator.SetBool("die", die);
     }
 
 

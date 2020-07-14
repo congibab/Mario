@@ -48,7 +48,7 @@ public class Enermy : MonoBehaviour
                 sprite_R.sprite = Die[0];
                 rb.AddForce(Bound, ForceMode2D.Impulse);
                 Destroy(gameObject, 0.5f);
-            }
+            } 
         }
 
         //敵と壁に当たったら反対向きで移動

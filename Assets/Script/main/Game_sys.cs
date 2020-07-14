@@ -9,7 +9,7 @@ public class Game_sys : MonoBehaviour
 
 
     [HideInInspector]
-    public static float Max_Time = 30.0f;
+    public static float Max_Time = 60.0f;
 
 
     [HideInInspector]

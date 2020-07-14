@@ -9,6 +9,7 @@ TagManager:
   - Block
   - Enemy
   - wall
+  - mushroom
   layers:
   - Default
   - TransparentFX
