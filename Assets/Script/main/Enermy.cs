@@ -46,9 +46,9 @@ public class Enermy : MonoBehaviour
             if (P_velocity.y < 0 && col.transform.position.y > transform.position.y)
             {
                 sprite_R.sprite = Die[0];
-                rb.AddForce(Bound, ForceMode2D.Impulse);
+                //rb.AddForce(Bound, ForceMode2D.Impulse);
                 Destroy(gameObject, 0.5f);
-            } 
+            }
         }
 
         //敵と壁に当たったら反対向きで移動

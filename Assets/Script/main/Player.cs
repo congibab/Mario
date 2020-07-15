@@ -23,8 +23,9 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private BoxCollider2D Box_col;
-    
 
+    private int status_count; // 0 = small, 1 = big, 2 = fire
+  
     //アニメーション（モーション）切り替える変数
     //------------------------------------------------------------------
 
@@ -42,15 +43,19 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         Box_col = GetComponent<BoxCollider2D>();
         is_Jumping = false;
-
+        status_count = 0;
         //item_sys = GetComponent<Item_sys>();
     }
 
+    void Start()
+    {
+        change_status();
+    }
 
     void Update()
     {
-
-        if(Input.GetAxis("Horizontal") != 0)
+        Debug.Log(rb.velocity);
+        if (Input.GetAxis("Horizontal") != 0)
         {
             Working = true;
         }
@@ -65,6 +70,11 @@ public class Player : MonoBehaviour
             is_Jumping = true;
         }
 
+        if(Input.GetKeyUp(KeyCode.Space))
+        {
+            is_Jumping = false;
+        }
+
     }
 
     void FixedUpdate()
@@ -77,6 +87,8 @@ public class Player : MonoBehaviour
     {
         velocity_temp = rb.velocity;
         initAnimator();
+        change_status();
+
     }
 
     void OnCollisionEnter2D(Collision2D col)
@@ -90,12 +102,26 @@ public class Player : MonoBehaviour
 
         if (col.gameObject.CompareTag("Enemy"))
         {
+            
 
-            if (transform.position.y <= col.transform.position.y)
+            if (rb.velocity.y > 0)
             {
-                die = true;
-                Char_Die();
+                if (status_count > 0) status_count--;
+                
+                else
+                {
+                    die = true;
+                    Char_Die();
+                }
             }
+        }
+
+
+
+        if (col.gameObject.CompareTag("mushroom"))
+        {
+            status_count = 1;
+            Destroy(col.gameObject);
         }
     }
 
@@ -159,5 +185,24 @@ public class Player : MonoBehaviour
         animator.SetBool("die", die);
     }
 
+    void change_status()
+    {
+        switch (status_count)
+        {
+            case 0:
+                animator.runtimeAnimatorController = Resources.Load("Player(small)") as RuntimeAnimatorController;
+                Box_col.size = new Vector2(0.75f, 1.0f);
+                break;
+
+            case 1:
+                animator.runtimeAnimatorController = Resources.Load("Player(Big)") as RuntimeAnimatorController;
+                Box_col.size = new Vector2(1.0f, 2.0f);
+                break;
+
+            case 2:
+                //animator.runtimeAnimatorController = Resources.Load("Player(Big)") as RuntimeAnimatorController;
+                break;
+        }
+    }
 
 }
