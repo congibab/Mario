@@ -143,5 +143,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   black:
   - {fileID: 8441834917695372577, guid: 068c2567b3c6608498e3a80b6d9caa72, type: 3}
-  myPrefab: {fileID: 5444422739350936054, guid: 6d303c144c384d346a76f50f0249f42c,
+  myPrefab: {fileID: 1835221694732607119, guid: 6d303c144c384d346a76f50f0249f42c,
     type: 3}

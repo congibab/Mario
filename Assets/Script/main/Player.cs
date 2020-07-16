@@ -5,6 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
+    [SerializeField]
+    private GameObject fire_ball_prefab;
+
     [SerializeField, Range(0.0f, 10.0f)]
     private float Move_Speed = 10.0f; //移動速度
 
@@ -16,7 +19,7 @@ public class Player : MonoBehaviour
 
     private Vector3 velocity_temp;
 
-    private float hori; //Game_Pad 左スティックの右左を取得
+    private float hori;//Game_Pad 左スティックの右左を取得
     private float vert; //Game_Pad 左スティックの上下を取得
 
     private SpriteRenderer spr;
@@ -36,6 +39,9 @@ public class Player : MonoBehaviour
 
     private bool is_Jumping;
 
+    public static float move_vec = 0;
+    public static Vector2 col_size;
+
     void Awake()
     {
         spr = GetComponent<SpriteRenderer>();
@@ -49,18 +55,19 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        hori = Input.GetAxis("Horizontal");
         change_status();
     }
 
     void Update()
     {
-        Debug.Log(rb.velocity);
-        if (Input.GetAxis("Horizontal") != 0)
+        if (hori != 0)
         {
             Working = true;
+            set_move_vec();
         }
 
-        if (Input.GetAxis("Horizontal") == 0)
+        if (hori == 0)
         {
             Working = false;
         }
@@ -73,6 +80,12 @@ public class Player : MonoBehaviour
         if(Input.GetKeyUp(KeyCode.Space))
         {
             is_Jumping = false;
+        }
+
+        if(Input.GetKeyUp(KeyCode.Mouse0) && status_count >= 2)
+        {
+            Vector3 fire_pos = new Vector3(2.0f * move_vec, 0,0);
+           var fire_ball = Instantiate(fire_ball_prefab, transform.position + fire_pos, Quaternion.identity);
         }
 
     }
@@ -104,7 +117,7 @@ public class Player : MonoBehaviour
         {
             
 
-            if (rb.velocity.y > 0)
+            if (rb.velocity.y >= 0)
             {
                 if (status_count > 0) status_count--;
                 
@@ -120,7 +133,14 @@ public class Player : MonoBehaviour
 
         if (col.gameObject.CompareTag("mushroom"))
         {
-            status_count = 1;
+            if (status_count == 2) status_count = 2;
+            else status_count = 1;
+            Destroy(col.gameObject);
+        }
+
+        if(col.gameObject.CompareTag("flower"))
+        {
+            status_count = 2;
             Destroy(col.gameObject);
         }
     }
@@ -191,18 +211,34 @@ public class Player : MonoBehaviour
         {
             case 0:
                 animator.runtimeAnimatorController = Resources.Load("Player(small)") as RuntimeAnimatorController;
-                Box_col.size = new Vector2(0.75f, 1.0f);
+                col_size = new Vector2(0.75f, 1.0f);
+                Box_col.size = col_size;
                 break;
 
             case 1:
                 animator.runtimeAnimatorController = Resources.Load("Player(Big)") as RuntimeAnimatorController;
-                Box_col.size = new Vector2(1.0f, 2.0f);
+                col_size = new Vector2(1.0f, 2.0f);
+                Box_col.size = col_size;
                 break;
 
             case 2:
-                //animator.runtimeAnimatorController = Resources.Load("Player(Big)") as RuntimeAnimatorController;
+                animator.runtimeAnimatorController = Resources.Load("Player(fire)") as RuntimeAnimatorController;
+                col_size = new Vector2(1.0f, 2.0f);
+                Box_col.size = col_size;
                 break;
         }
     }
 
+    private void set_move_vec()
+    {
+        if(hori < 0)
+        {
+            move_vec = -1;
+        }
+
+        else if(hori > 0)
+        {
+            move_vec = 1;
+        }
+    }
 }

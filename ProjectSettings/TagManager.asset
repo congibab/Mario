@@ -10,6 +10,7 @@ TagManager:
   - Enemy
   - wall
   - mushroom
+  - flower
   layers:
   - Default
   - TransparentFX
