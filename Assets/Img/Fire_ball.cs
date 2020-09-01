@@ -19,9 +19,10 @@ public class Fire_ball : MonoBehaviour
     void Update()
     {
         View_pos = Camera.main.WorldToViewportPoint(transform.position);
-        View_pos.x = Mathf.Clamp01(View_pos.x);
-        View_pos.y = Mathf.Clamp01(View_pos.y);
-       
+        
+        if(View_pos.x > 1 || View_pos.x < 0 || View_pos.y > 1 || View_pos.y < 0) Destroy(gameObject);
+        //View_pos.x = Mathf.Clamp01(View_pos.x);
+        //View_pos.y = Mathf.Clamp01(View_pos.y);
 
         transform.position += fire_move;
         transform.Rotate(0, 0, Time.deltaTime * rot_speed * rot_vec);

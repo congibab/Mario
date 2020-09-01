@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject fire_ball_prefab;
+    private GameObject fire_ball_prefab; // fire ballで攻撃
 
     [SerializeField, Range(0.0f, 10.0f)]
     private float Move_Speed = 10.0f; //移動速度
@@ -34,7 +34,9 @@ public class Player : MonoBehaviour
 
     private bool Working;
     private bool is_Grounding = false; //キャラの着地判定
-    public static bool die = false;
+    public static bool die;
+
+    public static Vector3 view_Pos;
     //------------------------------------------------------------------
 
     private bool is_Jumping;
@@ -48,7 +50,9 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         Box_col = GetComponent<BoxCollider2D>();
+        
         is_Jumping = false;
+        die = false;
         status_count = 0;
         //item_sys = GetComponent<Item_sys>();
     }
@@ -61,6 +65,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        view_Pos = Camera.main.WorldToViewportPoint(transform.position);
+        
         if (hori != 0)
         {
             Working = true;
@@ -75,6 +81,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && is_Grounding) //ジャンプ
         {
             is_Jumping = true;
+            StartCoroutine(Delay());
         }
 
         if(Input.GetKeyUp(KeyCode.Space))
@@ -180,13 +187,20 @@ public class Player : MonoBehaviour
     /// </summary>
     void Jump()
     {
-        if (!is_Jumping) return;
-        rb.velocity = Vector2.zero;
+        //if (!is_Jumping) return;
+        //rb.velocity = Vector2.zero;
 
-        Jump_Velocity = new Vector2(0, Jump_Power );
+        //Jump_Velocity = new Vector2(0, Jump_Power );
+        //rb.AddForce(Jump_Velocity, ForceMode2D.Impulse);
+        //is_Grounding = false;
+        //is_Jumping = false;
+
+        if (is_Jumping == false) return;
+
+        Jump_Velocity = new Vector2(0, Jump_Power);
         rb.AddForce(Jump_Velocity, ForceMode2D.Impulse);
         is_Grounding = false;
-        is_Jumping = false;
+        //is_Jumping = false;
     }
 
     void Char_Die()
@@ -240,5 +254,11 @@ public class Player : MonoBehaviour
         {
             move_vec = 1;
         }
+    }
+
+    IEnumerator Delay()
+    {
+        yield return new WaitForSeconds(0.3f);
+        is_Jumping = false;
     }
 }

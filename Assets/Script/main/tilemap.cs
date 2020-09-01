@@ -29,7 +29,7 @@ public class tilemap : MonoBehaviour
             var test2 = col.transform.position.y + Player.col_size.y/2;
          
             cell_pos = grid.WorldToCell(new Vector3(test1, test2, transform.position.z));
-            Debug.Log(cell_pos);
+            //Debug.Log(cell_pos);
         }
     }
 }

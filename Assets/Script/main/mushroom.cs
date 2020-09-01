@@ -25,7 +25,7 @@ public class mushroom : MonoBehaviour
         Move();
         _distance = player.transform.position.x - transform.position.x;
         _distance = _distance / Mathf.Abs(_distance);
-        Debug.Log(_distance);
+        //Debug.Log(_distance);
     }
 
     private void OnCollisionEnter2D(Collision2D col)

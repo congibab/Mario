@@ -15,10 +15,12 @@ public class Game_Manger : MonoBehaviour
     void Update()
     {
         //制限時間が0になったらGameOver画面に移動
-        if(Game_sys.Limit_Time <= 0)
+        //Playerが地面に落ちたら
+        if(Game_sys.Limit_Time <= 0 || Player.view_Pos.y < 0)
         {
             SceneManager.LoadScene("GameOver");
             Game_sys.Limit_Time = Game_sys.Max_Time;
         }
+
     }
 }
