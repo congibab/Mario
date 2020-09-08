@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     //------------------------------------------------------------------
 
     private bool is_Jumping;
+    private bool jumpMotion;
 
     public static float move_vec = 0;
     public static Vector2 col_size;
@@ -73,17 +74,20 @@ public class Player : MonoBehaviour
             set_move_vec();
         }
 
-        if (hori == 0)
-        {
-            Working = false;
-        }
+        if (hori == 0) Working = false;
+        
 
-        if (Input.GetKeyDown(KeyCode.Space) && is_Grounding) //ジャンプ
+        if (Input.GetKeyDown(KeyCode.Space) && rb.velocity.y == 0)
+                //&& is_Grounding) //ジャンプ
         {
             is_Jumping = true;
+            is_Grounding = true;
             StartCoroutine(Delay());
         }
 
+        if(rb.velocity.y != 0) is_Grounding = false;
+        if(rb.velocity.y == 0) is_Grounding = true;
+        
         if(Input.GetKeyUp(KeyCode.Space))
         {
             is_Jumping = false;
@@ -114,10 +118,10 @@ public class Player : MonoBehaviour
     void OnCollisionEnter2D(Collision2D col)
     {
 
-        if (rb.velocity.y == 0 && rb.velocity.y > velocity_temp.y)
-        {
-            is_Grounding = true;
-        }
+       // if (rb.velocity.y == 0 && rb.velocity.y > velocity_temp.y)
+        //{
+        //    is_Grounding = true;
+        //}
 
 
         if (col.gameObject.CompareTag("Enemy"))
@@ -187,20 +191,11 @@ public class Player : MonoBehaviour
     /// </summary>
     void Jump()
     {
-        //if (!is_Jumping) return;
-        //rb.velocity = Vector2.zero;
-
-        //Jump_Velocity = new Vector2(0, Jump_Power );
-        //rb.AddForce(Jump_Velocity, ForceMode2D.Impulse);
-        //is_Grounding = false;
-        //is_Jumping = false;
-
         if (is_Jumping == false) return;
 
         Jump_Velocity = new Vector2(0, Jump_Power);
         rb.AddForce(Jump_Velocity, ForceMode2D.Impulse);
-        is_Grounding = false;
-        //is_Jumping = false;
+        //is_Grounding = false;
     }
 
     void Char_Die()
